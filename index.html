@@ -648,14 +648,19 @@
             </div>
             <form id="form-order" class="space-y-4" onsubmit="return false;">
               <div>
-                <label for="inp-customer" class="block text-xs font-semibold text-slate-400 mb-1.5">Nama Pelanggan <span
-                    class="text-red-400">*</span></label>
-                <input type="text" id="inp-customer" placeholder="Budi Santoso" class="inp" required />
+                <label for="inp-customer" class="block text-xs font-semibold text-slate-400 mb-1.5">Pilih Pelanggan <span class="text-red-400">*</span></label>
+                <div class="flex gap-2">
+                  <select id="inp-customer" class="inp" required onchange="autoFillCustomerPhone()">
+                    <option value="">-- Pilih Customer --</option>
+                  </select>
+                  <button type="button" onclick="navigateTo('customer')" class="px-3 rounded-xl flex items-center justify-center font-bold transition" style="background:rgba(59,130,246,.15); color:#60a5fa; border:1px solid rgba(59,130,246,.3);" title="Tambah Customer Baru">
+                    <i data-lucide="user-plus" style="width:16px;height:16px;"></i>
+                  </button>
+                </div>
               </div>
               <div>
-                <label for="inp-phone" class="block text-xs font-semibold text-slate-400 mb-1.5">No. HP</label>
-                <input type="tel" id="inp-phone" placeholder="08xxxxxxxxxx" pattern="[0-9]{10,13}"
-                  title="Masukkan nomor HP valid (10-13 digit)" class="inp" />
+                <label for="inp-phone" class="block text-xs font-semibold text-slate-400 mb-1.5">No. HP (Otomatis)</label>
+                <input type="tel" id="inp-phone" placeholder="08xxxxxxxxxx" class="inp" style="background:rgba(15,23,42,.6);cursor:not-allowed;" readonly />
               </div>
               <div>
                 <label for="inp-layanan" class="block text-xs font-semibold text-slate-400 mb-1.5">Layanan <span
@@ -1691,6 +1696,7 @@
     function renderAllModules() {
       renderRecentTable();
       populateLayananSelect();
+      populateCustomerSelect();
       renderAllTransaksi();
       renderDeposit();
       renderCustomer();
@@ -1989,6 +1995,14 @@
       const time = nowTime();
       const trx = { _id, id, customer, phone, layanan, berat, total, status: 'Proses', statusBayar, metodeBayar, time, tanggal: todayISO() };
       transactions.push(trx);
+
+      const custObj = customerList.find(c => c.nama === customer);
+      if (custObj) {
+        custObj.totalOrder = (custObj.totalOrder || 0) + 1;
+        renderCustomer();
+        sendDataToSheets('Data_Customer', { _id: custObj._id, totalOrder: custObj.totalOrder }, 'update');
+      }
+
       renderRecentTable();
       renderAllTransaksi();
       computeNettCash();
@@ -1998,6 +2012,7 @@
       showToast(`✅ Order ${id} tersimpan!`);
       document.getElementById('form-order').reset();
       document.getElementById('inp-total').textContent = 'Rp 0';
+      autoFillCustomerPhone(); // Bersihkan input HP
     }
 
     let currentTrxData = null;
@@ -2230,6 +2245,7 @@
     </tr>`).join('') : emptyRow(5, 'Belum ada data customer.');
 
       renderPagination('cust-pagination', custPage, totalPages, total, CUST_PAGE_SIZE, (p) => { custPage = p; renderCustomer(); });
+      populateCustomerSelect();
       lucide.createIcons();
     }
 
@@ -2764,6 +2780,29 @@
           `<option value="${esc(l.namaLayanan)}" data-price="${l.harga}" ${l.namaLayanan === current ? 'selected' : ''}>${esc(l.namaLayanan)} — ${formatRp(l.harga)}/${esc(l.satuan)}</option>`
         ).join('');
       calcOrderTotal();
+    }
+
+    function populateCustomerSelect() {
+      const sel = document.getElementById('inp-customer');
+      if (!sel) return;
+      const current = sel.value;
+      sel.innerHTML = '<option value="">-- Pilih Customer --</option>' +
+        customerList.map(c =>
+          `<option value="${esc(c.nama)}" data-phone="${esc(c.phone || '')}" ${c.nama === current ? 'selected' : ''}>${esc(c.nama)} ${c.phone ? ' - '+esc(c.phone) : ''}</option>`
+        ).join('');
+      autoFillCustomerPhone();
+    }
+
+    function autoFillCustomerPhone() {
+      const sel = document.getElementById('inp-customer');
+      const phoneInp = document.getElementById('inp-phone');
+      if (!sel || !phoneInp) return;
+      const opt = sel.selectedOptions[0];
+      if (opt && opt.dataset.phone) {
+        phoneInp.value = opt.dataset.phone;
+      } else {
+        phoneInp.value = '';
+      }
     }
 
     function renderLayananInfoPanel() {
