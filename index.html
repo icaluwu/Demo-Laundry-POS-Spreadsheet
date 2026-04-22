@@ -1643,72 +1643,19 @@
     // LAYANAN_PRICES is derived dynamically from masterLayananList (see below)
 
     // ─── STATE ───
-    let transactions = [
-      { _id: genId(), id: 'MNC-001', customer: 'Budi Santoso', phone: '0812xxxx1234', layanan: 'Cuci Setrika', berat: 3.5, total: 28000, status: 'Selesai', time: '10:23' },
-      { _id: genId(), id: 'MNC-002', customer: 'Rina Aulia', phone: '0856xxxx5678', layanan: 'Express 6 Jam', berat: 2, total: 30000, status: 'Proses', time: '11:05' },
-      { _id: genId(), id: 'MNC-003', customer: 'Ahmad Fadli', phone: '0878xxxx9012', layanan: 'Cuci Kering Setrika', berat: 5, total: 35000, status: 'Proses', time: '12:40' },
-      { _id: genId(), id: 'MNC-004', customer: 'Joko Widoadmojo', phone: '0813xxxx3456', layanan: 'Bed Cover', berat: 1, total: 35000, status: 'Diambil', time: '08:15' },
-      { _id: genId(), id: 'MNC-005', customer: 'Siti Nurhaliza', phone: '0821xxxx7890', layanan: 'Cuci Kering', berat: 4, total: 24000, status: 'Selesai', time: '09:30' },
-      { _id: genId(), id: 'MNC-006', customer: 'Dewi Sartika', phone: '0899xxxx0001', layanan: 'Cuci Setrika', berat: 6, total: 48000, status: 'Selesai', time: '07:45' },
-      { _id: genId(), id: 'MNC-007', customer: 'Hendra Gunawan', phone: '0899xxxx0002', layanan: 'Express 6 Jam', berat: 3, total: 45000, status: 'Diambil', time: '08:30' },
-      { _id: genId(), id: 'MNC-008', customer: 'Mega Wati', phone: '0899xxxx0003', layanan: 'Cuci Kering Setrika', berat: 8, total: 56000, status: 'Selesai', time: '09:00' },
-      { _id: genId(), id: 'MNC-009', customer: 'Rizky Pratama', phone: '0899xxxx0004', layanan: 'Bed Cover', berat: 2, total: 70000, status: 'Proses', time: '10:00' },
-      { _id: genId(), id: 'MNC-010', customer: 'Lina Marlina', phone: '0899xxxx0005', layanan: 'Cuci Setrika', berat: 5, total: 40000, status: 'Selesai', time: '11:30' },
-      { _id: genId(), id: 'MNC-011', customer: 'Bambang Supriadi', phone: '0899xxxx0006', layanan: 'Setrika Saja', berat: 4, total: 20000, status: 'Proses', time: '13:00' },
-      { _id: genId(), id: 'MNC-012', customer: 'Maya Indah Sari', phone: '0899xxxx0007', layanan: 'Cuci Kering', berat: 5, total: 30000, status: 'Selesai', time: '14:15' },
-    ];
-    let trxCounter = 12;
+    let transactions = [];
+    let trxCounter = 0;
 
-    let depositList = [
-      { _id: genId(), customer: 'Budi Santoso', phone: '0812xxxx1234', jumlah: 250000, time: '09:10' },
-      { _id: genId(), customer: 'Rina Aulia', phone: '0856xxxx5678', jumlah: 150000, time: '10:30' },
-    ];
-
-    let customerList = [
-      { _id: genId(), nama: 'Budi Santoso', phone: '0812xxxx1234', alamat: 'Jl. Melati No. 1', totalOrder: 5 },
-      { _id: genId(), nama: 'Rina Aulia', phone: '0856xxxx5678', alamat: 'Jl. Mawar No. 8', totalOrder: 3 },
-      { _id: genId(), nama: 'Ahmad Fadli', phone: '0878xxxx9012', alamat: 'Jl. Dahlia No. 15', totalOrder: 4 },
-      { _id: genId(), nama: 'Siti Nurhaliza', phone: '0821xxxx7890', alamat: 'Jl. Anggrek No. 5', totalOrder: 7 },
-    ];
-
-    let pengeluaranList = [
-      { _id: genId(), nama: 'Detergen Bubuk 5kg', kategori: 'Bahan Cuci', jumlah: 45000, time: '08:10' },
-      { _id: genId(), nama: 'Token Listrik', kategori: 'Utilitas', jumlah: 25000, time: '09:00' },
-      { _id: genId(), nama: 'Plastik Packing', kategori: 'Perlengkapan', jumlah: 15000, time: '13:20' },
-    ];
-
-    let pengeluaranMgmtList = [
-      { _id: genId(), deskripsi: 'Gaji Karyawan — April', kategori: 'Gaji', jumlah: 3500000, tanggal: '01 Apr 2026' },
-      { _id: genId(), deskripsi: 'Sewa Tempat', kategori: 'Sewa', jumlah: 2000000, tanggal: '01 Apr 2026' },
-    ];
-
-    let antarJemputList = [
-      { _id: genId(), customer: 'Ahmad Fadli', phone: '0878xxxx9012', alamat: 'Jl. Melati No. 15', jadwal: '2026-04-21T14:00', tipe: 'Jemput', status: 'Menunggu' },
-      { _id: genId(), customer: 'Siti Nurhaliza', phone: '0821xxxx7890', alamat: 'Jl. Mawar No. 8', jadwal: '2026-04-22T09:00', tipe: 'Jemput', status: 'Menunggu' },
-      { _id: genId(), customer: 'Rina Aulia', phone: '0856xxxx5678', alamat: 'Jl. Anggrek No. 22', jadwal: '2026-04-21T16:00', tipe: 'Antar', status: 'Dalam Perjalanan' },
-    ];
-
-    let karyawanList = [
-      { _id: genId(), nama: 'Ahmad Kasir', jabatan: 'Kasir', phone: '0812-1111-2222', tglMasuk: '2024-01-01', gajiPokok: 2500000, status: 'Aktif' },
-      { _id: genId(), nama: 'Budi Laundry', jabatan: 'Staff Laundry', phone: '0856-2222-3333', tglMasuk: '2024-03-15', gajiPokok: 2000000, status: 'Aktif' },
-      { _id: genId(), nama: 'Cici Driver', jabatan: 'Driver', phone: '0878-3333-4444', tglMasuk: '2024-06-01', gajiPokok: 1800000, status: 'Aktif' },
-    ];
-
-    let laporanKerjaList = [
-      { _id: genId(), nama: 'Ahmad Kasir', tanggal: todayISO(), jamMasuk: '08:00', jamKeluar: '17:00', totalJam: 9, keterangan: 'Normal' },
-      { _id: genId(), nama: 'Budi Laundry', tanggal: todayISO(), jamMasuk: '08:30', jamKeluar: '17:30', totalJam: 9, keterangan: 'Normal' },
-    ];
+    let depositList = [];
+    let customerList = [];
+    let pengeluaranList = [];
+    let pengeluaranMgmtList = [];
+    let antarJemputList = [];
+    let karyawanList = [];
+    let laporanKerjaList = [];
 
     // ─── MASTER LAYANAN (source of truth for services & prices) ───
-    let masterLayananList = [
-      { _id: genId(), namaLayanan: 'Cuci Kering Setrika', harga: 7000, satuan: 'kg', deskripsi: 'Cuci + kering + setrika', aktif: true },
-      { _id: genId(), namaLayanan: 'Cuci Setrika', harga: 8000, satuan: 'kg', deskripsi: 'Cuci basah + setrika', aktif: true },
-      { _id: genId(), namaLayanan: 'Setrika Saja', harga: 5000, satuan: 'kg', deskripsi: 'Hanya setrika', aktif: true },
-      { _id: genId(), namaLayanan: 'Cuci Kering', harga: 6000, satuan: 'kg', deskripsi: 'Cuci + kering', aktif: true },
-      { _id: genId(), namaLayanan: 'Express 6 Jam', harga: 15000, satuan: 'kg', deskripsi: 'Layanan kilat 6 jam', aktif: true },
-      { _id: genId(), namaLayanan: 'Bed Cover', harga: 35000, satuan: 'pcs', deskripsi: 'Cuci bed cover/selimut', aktif: true },
-      { _id: genId(), namaLayanan: 'Karpet', harga: 25000, satuan: 'm²', deskripsi: 'Cuci karpet per meter', aktif: true },
-    ];
+    let masterLayananList = [];
 
     // Derive LAYANAN_PRICES from masterLayananList dynamically
     function getLayananPrices() {
@@ -2031,7 +1978,7 @@
         const depId = genId();
         const prevBal = saldo;
         const newBal = saldo - total;
-        const dRecord = { _id: depId, customer, phone, jumlah: -total, saldoSebelum: prevBal, saldoSesudah: newBal, kasir: 'Kasir', time: nowTime() };
+        const dRecord = { _id: depId, customer, phone, jumlah: -total, saldoSebelum: prevBal, saldoSesudah: newBal, kasir: 'Kasir', time: nowTime(), tanggal: todayISO() };
         depositList.push(dRecord);
         sendDataToSheets('Deposit', { ...dRecord, timestamp: new Date().toISOString() });
       }
@@ -2040,7 +1987,7 @@
       const _id = genId();
       const id = 'MNC-' + String(trxCounter).padStart(3, '0');
       const time = nowTime();
-      const trx = { _id, id, customer, phone, layanan, berat, total, status: 'Proses', statusBayar, metodeBayar, time };
+      const trx = { _id, id, customer, phone, layanan, berat, total, status: 'Proses', statusBayar, metodeBayar, time, tanggal: todayISO() };
       transactions.push(trx);
       renderRecentTable();
       renderAllTransaksi();
@@ -2699,7 +2646,7 @@
       document.getElementById('lap-trx').textContent = filteredTrx.length;
       document.getElementById('lap-avg').textContent = formatRp(filteredTrx.length ? Math.round(total / filteredTrx.length) : 0);
 
-      // Chart.js Revenue Trend (Mock 7 Days trend based on current total)
+      // Chart.js Revenue Trend (Real data based on transactions)
       const ct = document.getElementById('lap-revenue-chart');
       if (ct) {
         if (window.lapChart) window.lapChart.destroy();
@@ -2707,8 +2654,14 @@
         for (let i = 6; i >= 0; i--) {
           const d = new Date(); d.setDate(d.getDate() - i);
           days.push(d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }));
-          if (i === 0) revs.push(total); // Hari ini pakai asli dari filter
-          else revs.push(Math.floor(Math.random() * 400000) + 120000); // Mock hari lalu
+          
+          const isoDate = d.toISOString().split('T')[0];
+          let dayTotal = 0;
+          transactions.forEach(t => {
+            const tDate = t.tanggal || todayISO(); // Fallback
+            if (tDate === isoDate) dayTotal += t.total;
+          });
+          revs.push(dayTotal);
         }
         window.lapChart = new Chart(ct, {
           type: 'line',
